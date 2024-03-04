@@ -70,7 +70,11 @@ function Import-ReportsAndSubscriptions($currentPath, $currentRsPath, $overwrite
     foreach ($reportFile in $reportFiles) {
         $reportRsPath = $reportFile.DirectoryName.Substring($currentPath.Length).Replace("\", "/").TrimStart("/")
         try {
-            Write-RsCatalogItem -Proxy $proxy -Path $reportFile.FullName -RsFolder "/$reportRsPath" -Overwrite:$overwrite
+            if ($overwrite) {
+                Write-RsCatalogItem -Proxy $proxy -Path $reportFile.FullName -RsFolder "/$reportRsPath" -Overwrite
+            } else {
+                Write-RsCatalogItem -Proxy $proxy -Path $reportFile.FullName -RsFolder "/$reportRsPath"
+            }
             Write-Host "Report '$($reportFile.Name)' imported to '$reportRsPath'."
         } catch {
             Write-Host "Error importing report '$($reportFile.Name)': $_"
